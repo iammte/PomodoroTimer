@@ -1,7 +1,6 @@
 package org.hyperskill.pomodoro
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
@@ -9,38 +8,58 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 
+private val arcStartAngle = 270
+private val thicknessScale = 0.03f
 
-class TimerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : View(context, attrs, defStyle) {
+private lateinit var mBitmap: Bitmap
+private lateinit var mCanvas: Canvas
 
-    private val arcStartAngle = 270
-    private val thicknessScale = 0.03f
+private lateinit var mCircleOuterBounds: RectF
+private lateinit var mCircleInnerBounds: RectF
 
-    private lateinit var mBitmap: Bitmap
-    private lateinit var mCanvas: Canvas
+private var mCirclePaint: Paint = Paint()
+private var mEraserPaint: Paint = Paint()
 
-    private lateinit var mCircleOuterBounds: RectF
-    private lateinit var mCircleInnerBounds: RectF
+private var mCircleSweepAngle: Float = 0.0f
 
-    private lateinit var mCirclePaint: Paint
-    private lateinit var mEraserPaint: Paint
+private lateinit var mTimerAnimator: ValueAnimator
 
-    private var mCircleSweepAngle: Float = 0.0f
+class TimerView @JvmOverloads constructor(context: Context, var attrs: AttributeSet? = null, defStyle: Int = 0) : View(context, attrs, defStyle) {
 
-    private lateinit var mTimerAnimator: ValueAnimator
 
 /*
-fun TimerView(context: Context?) {
+fun timerView(context: Context?) {
 this(context, null)
 }
 
-fun TimerView(context: Context?, attrs: AttributeSet?) {
+fun timerView(context: Context?, attrs: AttributeSet?) {
 this(context, attrs, 0)
+}
+
+
+@SuppressLint("Recycle")
+fun timerView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
+timerView()
+super(context, attrs, defStyleAttr)
+var circleColor = Color.RED
+if (attrs != null) {
+val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView)
+circleColor = ta.getColor(R.styleable.TimerView_circleColor, circleColor)
+ta.recycle()
+}
+mCirclePaint = Paint()
+mCirclePaint.isAntiAlias = true
+mCirclePaint.color = circleColor
+mEraserPaint = Paint()
+mEraserPaint.isAntiAlias = true
+mEraserPaint.color = Color.TRANSPARENT
+mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
 }
 */
 
-    @SuppressLint("Recycle")
-    fun timerView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-//        super(context, attrs, defStyleAttr)
+
+
+    fun timerView() {
         var circleColor = Color.RED
         if (attrs != null) {
             val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView)
@@ -55,6 +74,7 @@ this(context, attrs, 0)
         mEraserPaint.color = Color.TRANSPARENT
         mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec) // Trick to make the view square
@@ -80,8 +100,7 @@ this(context, attrs, 0)
     }
 
     fun start(secs: Int) {
-        stop()
-
+        timerView()
         mTimerAnimator = ValueAnimator.ofFloat(0f, 1f)
         mTimerAnimator.duration = java.util.concurrent.TimeUnit.SECONDS.toMillis(secs.toLong())
         mTimerAnimator.interpolator = LinearInterpolator()

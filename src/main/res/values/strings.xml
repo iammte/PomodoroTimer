@@ -2,4 +2,6 @@
     <string name="app_name">Pomodoro Timer</string>
 
     <string name="startButton">Start</string>
+
+    <string name="resetButton">Reset</string>
 </resources>
