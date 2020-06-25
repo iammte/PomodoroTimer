@@ -1,10 +1,9 @@
 package org.hyperskill.pomodoro
 
-import android.os.Bundle
-import android.view.View
 //import android.os.Handler
-import android.widget.Button
 //import android.widget.TextView
+import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
 //        formatTimer(count)
 
-        runOnUiThread() {
+        runOnUiThread {
             kotlin.run { mTimerView.start(timerLength)  }
         }
 
