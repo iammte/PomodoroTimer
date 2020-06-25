@@ -1,20 +1,19 @@
 package org.hyperskill.pomodoro
 
-import android.os.Bundle
-import android.view.View
 //import android.os.Handler
-import android.widget.Button
 //import android.widget.TextView
+import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     private var timerLength = 30
 
-    private lateinit var mTimerView: TimerView
+    lateinit var mTimerView: TimerView
 
     private lateinit var startButton: Button
-//    private lateinit var resetButton: Button
+    private lateinit var resetButton: Button
 //    private lateinit var timerView: TextView
 //    private val handler = Handler()
 //    private var count = 3
@@ -27,29 +26,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         startButton = findViewById(R.id.startButton)
-//        resetButton = findViewById(R.id.resetButton)
+        resetButton = findViewById(R.id.resetButton)
         mTimerView = findViewById(R.id.timer)
 
 //        formatTimer(count)
 
-        runOnUiThread() {
-            kotlin.run { mTimerView.start(timerLength)  }
+        startButton.setOnClickListener {
+            mTimerView.start(timerLength)
         }
 
-//        startButton.setOnClickListener() {
-//
-//            mTimerView.start(timerLength)
-//        }
+        resetButton.setOnClickListener {
+            mTimerView.stop()
+        }
 
-//        resetButton.setOnClickListener() {
-//            onPause()
-//        }
-
-//        @Override
-//        fun onPause() {
-//            mTimerView.stop()
-//            super.onPause()
-//        }
+/*
+@Override
+fun onPause() {
+mTimerView.stop()
+super.onPause()
+}
+*/
 
 /*
 startButton.setOnClickListener {
