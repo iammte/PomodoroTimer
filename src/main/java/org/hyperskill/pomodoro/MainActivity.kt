@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity(), Runnable {
             } else {
                 timerLength = 30
                 formatTimer(timerLength)
+                mTimerView.start(timerLength)
             }
         }
 
