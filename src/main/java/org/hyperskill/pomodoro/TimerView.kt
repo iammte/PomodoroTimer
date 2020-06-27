@@ -8,8 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 
-private val arcStartAngle = 270
-private val thicknessScale = 0.03f
+private const val arcStartAngle = 270
+private const val thicknessScale = 0.03f
 
 private lateinit var mBitmap: Bitmap
 private lateinit var mCanvas: Canvas
@@ -23,6 +23,14 @@ private var mEraserPaint: Paint = Paint()
 private var mCircleSweepAngle: Float = 0.0f
 
 private lateinit var mTimerAnimator: ValueAnimator
+
+var state: TimerState = TimerState.WORK
+
+enum class TimerState{
+    WORK,
+    REST,
+    STOP;
+}
 
 class TimerView @JvmOverloads constructor(context: Context, var attrs: AttributeSet? = null, defStyle: Int = 0) : View(context, attrs, defStyle) {
 
@@ -59,8 +67,16 @@ mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
 
 
 
-    fun timerView() {
-        var circleColor = Color.RED
+    private fun timerView() {
+
+        var circleColor = Color.CYAN
+
+        circleColor = when(state) {
+            TimerState.WORK -> Color.RED
+            TimerState.REST -> Color.GREEN
+            TimerState.STOP -> Color.YELLOW
+        }
+
         if (attrs != null) {
             val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView)
             circleColor = ta.getColor(R.styleable.TimerView_circleColor, circleColor)
@@ -112,6 +128,8 @@ mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     fun stop() {
         if (mTimerAnimator.isRunning) {
             mTimerAnimator.cancel()
+            drawProgress(0f)
+        } else {
             drawProgress(0f)
         }
     }
