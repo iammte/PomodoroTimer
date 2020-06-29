@@ -1,12 +1,11 @@
 package org.hyperskill.pomodoro
 
-//import android.os.Handler
-//import android.widget.TextView
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+//import java.util.*
 
 class MainActivity : AppCompatActivity(), Runnable {
 
@@ -23,7 +22,6 @@ class MainActivity : AppCompatActivity(), Runnable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -35,32 +33,45 @@ class MainActivity : AppCompatActivity(), Runnable {
         formatTimer(timerLength)
 
         startButton.setOnClickListener {
-            count++
-            if (!isCounting) {
-                state = if (count % 2 != 0) {
-                    TimerState.REST
-                } else {
-                    TimerState.WORK
-                }
-                formatTimer(timerLength)
-                isCounting = true
-                mTimerView.start(timerLength)
-                handler.postDelayed(this, 1000)
-            } else {
-                timerLength = 30
-                formatTimer(timerLength)
-                mTimerView.start(timerLength)
-            }
+           startFun()
         }
 
         resetButton.setOnClickListener {
-            mTimerView.stop()
-            isCounting = false
-            timerLength = 30
-            formatTimer(timerLength)
+            restartFun()
         }
 
+    }
 
+    private fun startFun() {
+        count++
+
+        if (!isCounting) {
+
+            state = if (count % 2 != 0) {
+                TimerState.REST
+            } else {
+                TimerState.WORK
+            }
+
+            formatTimer(timerLength)
+            isCounting = true
+            mTimerView.start(timerLength)
+            handler.postDelayed(this, 1000)
+
+        } else {
+
+            timerLength = 30
+            formatTimer(timerLength)
+            mTimerView.start(timerLength)
+
+        }
+    }
+
+    private fun restartFun() {
+        mTimerView.stop()
+        isCounting = false
+        timerLength = 30
+        formatTimer(timerLength)
     }
 
     override fun run() {
@@ -71,6 +82,7 @@ class MainActivity : AppCompatActivity(), Runnable {
             if (timerLength == 0) {
                 isCounting = false
                 timerLength = 30
+                startFun()
                 return
             }
 
