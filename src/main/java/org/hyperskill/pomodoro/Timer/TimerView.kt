@@ -1,4 +1,4 @@
-package org.hyperskill.pomodoro
+package org.hyperskill.pomodoro.Timer
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -7,6 +7,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
+import org.hyperskill.pomodoro.R
+import org.hyperskill.pomodoro.clockView
 
 private const val arcStartAngle = 270
 private const val thicknessScale = 0.05f
@@ -26,6 +28,7 @@ private lateinit var mTimerAnimator: ValueAnimator
 private var circleColor = Color.CYAN
 
 var state: TimerState = TimerState.WORK
+
 
 enum class TimerState{
     WORK,
@@ -66,9 +69,7 @@ mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
 }
 */
 
-
-
-     private fun timerView() {
+    private fun timerView() {
 
         circleColor = when(state) {
             TimerState.WORK -> Color.RED
@@ -90,6 +91,14 @@ mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
 
+
+    fun getText(): String {
+        return clockView.text.toString()
+    }
+
+    fun getColor(): Int {
+        return circleColor
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec) // Trick to make the view square
@@ -151,4 +160,10 @@ mEraserPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         invalidate()
     }
 
+}
+
+fun formatTimer(count: Int) {
+    val remaining = count.toString().padStart(4, '0')
+    val formatted = "${remaining.substring(0, 2)}:${remaining.substring(2)}"
+    clockView.text = formatted
 }

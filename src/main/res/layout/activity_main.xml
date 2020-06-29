@@ -22,8 +22,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.439" />
 
-    <org.hyperskill.pomodoro.TimerView
-        android:id="@+id/timer"
+    <org.hyperskill.pomodoro.Timer.TimerView
+        android:id="@+id/timerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
